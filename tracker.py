@@ -1,4 +1,5 @@
 from income_expense import Income, Expense
+from database import income_collection, expense_collection
 
 class FinanceTracker():
     def __init__(self):
@@ -7,8 +8,10 @@ class FinanceTracker():
 
     def add_income(self, income):
         self.incomes.append(income)
+        income_collection.insert_one(income.to_dict())
     def add_expense(self, expense):
         self.expenses.append(expense)
+        expense_collection.insert_one(expense.to_dict())
 
     def total_income(self):
         total_income = 0 
