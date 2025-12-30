@@ -1,5 +1,6 @@
 from income_expense import Income, Expense
 from database import income_collection, expense_collection
+from datetime import datetime
 
 class FinanceTracker():
     def __init__(self):
@@ -31,13 +32,40 @@ class FinanceTracker():
 
 e = FinanceTracker()
 
-income = Income(30000)
-expense1 = Expense(3000, "Food")
-expense2 = Expense(3000, "Electricity")
+choice = input("Do You want to add an INCOME or EXPENSE, write 'income' for INCOME and 'expense' for Expense: ")
 
-e.add_income(income)
-e.add_expense(expense1)
-e.add_expense(expense2)
-bal = e.balance()
-#print(bal)
-print(e)
+if choice == 'income':
+    income_amount = input('Enter an Income Amount: ')
+    note_input = input('Add a note: ')
+    date_input = input('Enter a date in the format DD-MM-YYYY: ')
+
+    if date_input:
+        date = datetime.strptime(date_input, "%d-%m-%Y")
+    else:
+        date = None
+
+    income = Income(amount = income_amount, note = note_input, date = date_input)
+    e.add_income(income)
+
+# e.add_income(income)
+# e.add_expense(expense1)
+# e.add_expense(expense2)
+# bal = e.balance()
+# #print(bal)
+# print(e)
+elif choice == 'expense':
+    expense_amount = input('Add an expense Amount: ')
+    category_input = input('Add an expense category: ')
+    note_input = input('Add a note: ')
+    date_input = input('Enter a date in the format DD-MM-YYYY: ')
+
+
+    if date_input:
+        date = datetime.strptime(date_input, "%d-%m-%Y")
+    else:
+        date = None
+
+    expense = Expense(amount = expense_amount, category = category_input, note = note_input, date = date_input)
+    e.add_expense(expense)
+else:
+    print("Invalid input choice , write 'income' for INCOME and 'expense' for Expense")
