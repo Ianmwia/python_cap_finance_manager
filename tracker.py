@@ -16,13 +16,13 @@ class FinanceTracker():
 
     def total_income(self):
         total_income = 0 
-        for i in self.incomes:
-            total_income += i.amount
+        for i in income_collection.find():
+            total_income += float(i["amount"])
         return total_income
     def total_expenses(self):
         total_expenses = 0 
-        for i in self.expenses:
-            total_expenses += i.amount
+        for i in expense_collection.find():
+            total_expenses += float(i["amount"])
         return total_expenses
 
     def balance(self):
@@ -35,7 +35,7 @@ e = FinanceTracker()
 choice = input("Do You want to add an INCOME or EXPENSE, write 'income' for INCOME and 'expense' for Expense: ")
 
 if choice == 'income':
-    income_amount = input('Enter an Income Amount: ')
+    income_amount = float(input('Enter an Income Amount: '))
     note_input = input('Add a note: ')
     date_input = input('Enter a date in the format DD-MM-YYYY: ')
 
@@ -54,7 +54,7 @@ if choice == 'income':
 # #print(bal)
 # print(e)
 elif choice == 'expense':
-    expense_amount = input('Add an expense Amount: ')
+    expense_amount = float(input('Add an expense Amount: '))
     category_input = input('Add an expense category: ')
     note_input = input('Add a note: ')
     date_input = input('Enter a date in the format DD-MM-YYYY: ')
@@ -69,3 +69,6 @@ elif choice == 'expense':
     e.add_expense(expense)
 else:
     print("Invalid input choice , write 'income' for INCOME and 'expense' for Expense")
+
+balance = e.balance()
+print(f'Your current balance is: {balance}')
