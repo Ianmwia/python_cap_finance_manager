@@ -8,3 +8,4 @@ db = client["finance_manager"]
 
 income_collection = db["incomes"]
 expense_collection = db["expenses"]
+users_collection = db["users"]
