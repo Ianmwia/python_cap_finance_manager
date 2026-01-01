@@ -6,7 +6,7 @@ class Income():
         if date is not None:
             self.date = date
         else:
-            self.date = date.datetime.now()
+            self.date = datetime.now()
         
     def to_dict(self):
         return {
@@ -25,7 +25,7 @@ class Expense():
         if date is not None:
             self.date = date
         else:
-            self.date = date.datetime.now()
+            self.date = datetime.now()
         
     def to_dict(self):
         return {
