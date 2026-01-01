@@ -17,7 +17,7 @@ else:
 #create the object
 e = FinanceTracker(username)
 
-choice = input("Do You want to add an INCOME or EXPENSE, write 'income' for INCOME and 'expense' for Expense: ")
+choice = input("Do You want to add an INCOME or EXPENSE or check BALANCE, write 'income' for INCOME , 'expense' for Expense or 'balance' for BALANCE or list_all_expenses to LIST ALL EXPENSES: ")
 
 if choice == 'income':
     income_amount = float(input('Enter an Income Amount: '))
@@ -53,8 +53,27 @@ elif choice == 'expense':
 
     expense = Expense(amount = expense_amount, category = category_input, note = note_input, date = date)
     e.add_expense(expense)
+elif choice == 'balance':
+    """
+    read the users balance from mongodb
+    """
+    balance = e.balance()
+    print(f'{username}, Your current balance is: {balance:,.2f}')
+
+elif choice == "list_all_expenses":
+    """
+    list all expenses indexed
+    """
+    list_expense = e.list_expenses()
+    total_expenses = e.total_expenses()
+    if list_expense:
+        print(f"{username} You have spent a total of {total_expenses:,} on all your expenses which are: ")
+        for idx,expense_list in enumerate(list_expense, start=1):
+            print(f"{idx}.{expense_list}")
+    else:
+        print(f'{username}, You have no expenses')
 else:
     print("Invalid input choice , write 'income' for INCOME and 'expense' for Expense")
 
-balance = e.balance()
-print(f'Your current balance is: {balance}')
+#balance = e.balance()
+#print(f'Your current balance is: {balance}')
