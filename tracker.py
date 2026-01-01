@@ -1,6 +1,4 @@
-from income_expense import Income, Expense
 from database import income_collection, expense_collection
-from datetime import datetime
 
 class FinanceTracker():
     def __init__(self, username):
@@ -34,6 +32,23 @@ class FinanceTracker():
         for i in expense_collection.find({"username": self.__username}):
             total_expenses += float(i["amount"])
         return total_expenses
+    
+    def list_expenses(self):
+        """
+        read expenses from mongo db sorted in ascending order
+        stored in an instance method
+        """
+        expenses_list = []
+        expenses = expense_collection.find({"username": self.__username}).sort("date", 1)
+        for my_expense in expenses:
+            category = my_expense.get("category")
+            amount = my_expense.get("amount")
+            note = my_expense.get("note")
+            date = my_expense.get("date")
+
+            expense_string = f"{category}, {amount}, {note}, {date}"
+            expenses_list.append(expense_string)
+        return expenses_list
 
     def balance(self):
         return self.total_income() - self.total_expenses()
