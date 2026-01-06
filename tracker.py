@@ -80,6 +80,22 @@ class FinanceTracker():
             {"_id": selected_income["_id"]},
             {"$set": {field: new_value}})
         return update_income
+    
+    def delete_income(self, index):
+        """
+        delete a specific users income entry from the database
+        """
+        incomes = list(income_collection.find({"username": self.__username}).sort("date", 1))
+        if not incomes:
+            return False
+        if index <1 or index >len(incomes):
+            return False
+        
+        selected_income = incomes[int(index) -1]
+        delete_income = income_collection.delete_one(
+            {"_id": selected_income["_id"]})
+        return delete_income
+
     def update_expense(self, index, field, new_value):
         """
         update a specific users expense entry bases on field selection

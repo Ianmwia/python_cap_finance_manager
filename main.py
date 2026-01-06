@@ -3,9 +3,11 @@ from income_expense import Income, Expense
 from datetime import datetime
 from database import users_collection
 
+
 #ask for username
 print("Welcome to Your Personal Finance Tracker")
 username = input("Please input your username: ").strip()
+
 
 #check if user exists , if not create one
 user = users_collection.find_one({"username": username})
@@ -15,8 +17,10 @@ else:
     users_collection.insert_one({"username": username})
     print(f"new user {username} created")
 
+
 #create the object
 e = FinanceTracker(username)
+
 
 choice = input(
     "What do you want to do?\n"
@@ -27,8 +31,11 @@ choice = input(
     "5. VIEW a LIST OF ALL YOUR EXPENSES, type 'list_all_expenses'\n"
     "6. UPDATE INCOME, type 'update_income'\n"
     "7. UPDATE an EXPENSE, type 'update_expense'\n"
+    "8. DELETE INCOME, type 'delete_income'\n"
+    "9. DELETE an EXPENSE, type 'delete_expense'\n"
     "Enter Your Choice: "
-)
+).strip().lower()
+
 
 if choice == 'income':
     income_amount = float(input('Enter an Income Amount: '))
@@ -47,6 +54,7 @@ if choice == 'income':
     income = Income(amount = income_amount, note = note_input, date = date)
     e.add_income(income)
 
+
 elif choice == 'expense':
     expense_amount = float(input('Add an expense Amount: '))
     category_input = input('Add an expense category: ')
@@ -64,12 +72,15 @@ elif choice == 'expense':
 
     expense = Expense(amount = expense_amount, category = category_input, note = note_input, date = date)
     e.add_expense(expense)
+
+
 elif choice == 'balance':
     """
     read the users balance from mongodb
     """
     balance = e.balance()
     print(f'{username}, Your current balance is: {balance:,.2f}')
+
 
 elif choice == "list_all_incomes":
     """
@@ -84,6 +95,7 @@ elif choice == "list_all_incomes":
     else:
         print(f'{username}, You have no expenses')
 
+
 elif choice == "list_all_expenses":
     """
     list all expenses indexed
@@ -96,6 +108,8 @@ elif choice == "list_all_expenses":
             print(f"{idx}.{expense_list}")
     else:
         print(f'{username}, You have no expenses')
+
+
 elif choice == "update_income":
     existing_incomes = e.list_incomes()
     for index, existing in enumerate(existing_incomes, start=1):
@@ -129,6 +143,24 @@ elif choice == "update_income":
         else:
             print('No changes made')
         break
+
+
+elif choice == "delete_income":
+    list_incomes = e.list_incomes()
+    
+    print("List of expenses")
+    for idx, list in enumerate(list_incomes, start=1):
+        print(f"{idx}. {list}")
+    deleted_index = int(input("which expense do you want to delete, enter an index for the list above: "))
+
+    delete_income = e.delete_income(deleted_index)
+
+    if deleted_index:
+        print(f"income {deleted_index} deleted")
+    else:
+        print('no income found')
+
+
 elif choice == "update_expense":
     existing_expenses = e.list_expenses()
     for index, existing in enumerate(existing_expenses, start=1):
@@ -169,11 +201,13 @@ elif choice == "update_expense":
         else:
             print('No changes made')
         break
+
+
 elif choice == "delete_expense":
-    list_expense = e.list_expenses()
+    list_expenses = e.list_expenses()
     
     print("List of expenses")
-    for idx, list in enumerate(list_expense, start=1):
+    for idx, list in enumerate(list_expenses, start=1):
         print(f"{idx}. {list}")
     deleted_index = int(input("which expense do you want to delete, enter an index for the list above: "))
 
@@ -184,7 +218,7 @@ elif choice == "delete_expense":
     else:
         print('no expense found')
 else:
-    print("Invalid input choice , write 'income' for INCOME and 'expense' for Expense")
+    print("Invalid input choice , Please select a valid input from the list")
 
 #balance = e.balance()
 #print(f'Your current balance is: {balance}')
