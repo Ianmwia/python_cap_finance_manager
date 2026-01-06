@@ -82,7 +82,7 @@ class FinanceTracker():
         return update_income
     def update_expense(self, index, field, new_value):
         """
-        update a specific users income entry bases on field selection
+        update a specific users expense entry bases on field selection
         """
         expenses = list(expense_collection.find({"username": self.__username}).sort("date", 1))
         if not expenses:
@@ -97,8 +97,21 @@ class FinanceTracker():
             {"_id": selected_income["_id"]},
             {"$set": {field: new_value}})
         return update_expense
-    def delete_expense(self):
-        pass
+    
+    def delete_expense(self, index):
+        """
+        delete a specific users expense from the database
+        """
+        expenses = list(expense_collection.find({"username": self.__username}).sort("date", 1))
+        if not expenses:
+            return False
+        if index <1 or index >len(expenses):
+            return False
+        
+        selected_income = expenses[int(index) -1]
+        delete_expense = expense_collection.delete_one(
+            {"_id": selected_income["_id"]})
+        return delete_expense
 
     def __str__(self):
         return f'Total Income {self.total_income()}, Total Expenses : {self.total_expenses()} and Balance is Ksh: {self.balance(): ,} '

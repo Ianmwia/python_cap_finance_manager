@@ -169,6 +169,20 @@ elif choice == "update_expense":
         else:
             print('No changes made')
         break
+elif choice == "delete_expense":
+    list_expense = e.list_expenses()
+    
+    print("List of expenses")
+    for idx, list in enumerate(list_expense, start=1):
+        print(f"{idx}. {list}")
+    deleted_index = int(input("which expense do you want to delete, enter an index for the list above: "))
+
+    delete_expense = e.delete_expense(deleted_index)
+
+    if deleted_index:
+        print(f"expense {deleted_index} deleted")
+    else:
+        print('no expense found')
 else:
     print("Invalid input choice , write 'income' for INCOME and 'expense' for Expense")
 
