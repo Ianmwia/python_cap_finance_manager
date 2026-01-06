@@ -4,12 +4,13 @@ from datetime import datetime
 from database import users_collection
 
 #ask for username
+print("Welcome to Your Personal Finance Tracker")
 username = input("Please input your username: ").strip()
 
 #check if user exists , if not create one
 user = users_collection.find_one({"username": username})
 if user:
-    print(f"welcome back {username}")
+    print(f"Welcome Back {username}")
 else:
     users_collection.insert_one({"username": username})
     print(f"new user {username} created")
@@ -17,7 +18,17 @@ else:
 #create the object
 e = FinanceTracker(username)
 
-choice = input("Do You want to add an INCOME or EXPENSE or check BALANCE, write 'income' for INCOME , 'expense' for Expense or 'balance' for BALANCE or list_all_incomes to see your INCOME SOURCES or list_all_expenses to LIST ALL EXPENSES: ")
+choice = input(
+    "What do you want to do?\n"
+    "1. Add an INCOME, type 'income'\n"
+    "2. Add an EXPENSE, type 'expense'\n"
+    "3.CHECK BALANCE, type 'balance'\n"
+    "4. VIEW a LIST OF ALL YOUR INCOMES, type 'list_all_incomes'\n"
+    "5. VIEW a LIST OF ALL YOUR EXPENSES, type 'list_all_expenses'\n"
+    "6. UPDATE INCOME, type 'update_income'\n"
+    "7. UPDATE an EXPENSE, type 'update_expense'\n"
+    "Enter Your Choice: "
+)
 
 if choice == 'income':
     income_amount = float(input('Enter an Income Amount: '))
@@ -114,7 +125,47 @@ elif choice == "update_income":
             exit()
         updated_income = e.update_income(select_income_by_index, select_field, new_value)
         if updated_income:
-            print("income_updated")
+            print("income updated")
+        else:
+            print('No changes made')
+        break
+elif choice == "update_expense":
+    existing_expenses = e.list_expenses()
+    for index, existing in enumerate(existing_expenses, start=1):
+        print(f"{index}. {existing}")
+    if not existing_expenses:
+        print('You have no incomes to update')
+    while True:
+
+        select_expense_by_index = int(input('select the index of the statement to update: '))
+        select_field = input("what do you want to update: amount, category, note or date: ")
+
+        if select_field  == "amount":
+            new_value = float(input('update amount to: '))
+
+        elif select_field == "category":
+            new_value = input('update category to: ')
+
+        elif select_field == "note":
+            new_value = input('update note to: ')
+
+        elif select_field == "date":
+            while True:
+                date_input = input('Enter a date in the format DD-MM-YYYY: ').strip()
+                if not date_input:
+                    print("Date is required! Please enter a date")
+                    continue
+                try:
+                    new_value = datetime.strptime(date_input, "%d-%m-%Y")
+                    break
+                except ValueError:
+                    print("invalid date format! use DD-MM-YYYY")
+        else:
+            print('Please select a valid field value')
+            exit()
+        updated_expenses = e.update_expense(select_expense_by_index, select_field, new_value)
+        if updated_expenses:
+            print("expense updated")
         else:
             print('No changes made')
         break

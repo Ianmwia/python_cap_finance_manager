@@ -56,7 +56,7 @@ class FinanceTracker():
             note = my_expense.get("note")
             date = my_expense.get("date")
 
-            expense_string = f"{category}, {amount}, {note}, {date}"
+            expense_string = f"{amount}, {category}, {note}, {date}"
             expenses_list.append(expense_string)
         return expenses_list
 
@@ -80,8 +80,23 @@ class FinanceTracker():
             {"_id": selected_income["_id"]},
             {"$set": {field: new_value}})
         return update_income
-    def update_expense(self):
-        pass
+    def update_expense(self, index, field, new_value):
+        """
+        update a specific users income entry bases on field selection
+        """
+        expenses = list(expense_collection.find({"username": self.__username}).sort("date", 1))
+        if not expenses:
+            return False
+        if index <1 or index >len(expenses):
+            return False
+        if field not in ("amount", "category", "note", "date"):
+            return False
+        
+        selected_income = expenses[int(index) -1]
+        update_expense = expense_collection.update_one(
+            {"_id": selected_income["_id"]},
+            {"$set": {field: new_value}})
+        return update_expense
     def delete_expense(self):
         pass
 
