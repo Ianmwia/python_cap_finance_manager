@@ -85,7 +85,39 @@ elif choice == "list_all_expenses":
             print(f"{idx}.{expense_list}")
     else:
         print(f'{username}, You have no expenses')
-
+elif choice == "update_income":
+    existing_incomes = e.list_incomes()
+    for index, existing in enumerate(existing_incomes, start=1):
+        print(f"{index}. {existing}")
+    if not existing_incomes:
+        print('You have no incomes to update')
+    while True:
+        select_income_by_index = int(input('select the index of the statement to update'))
+        select_field = input("what do you want to update: amount, note or date: ")
+        if select_field  == "amount":
+            new_value = float(input('update amount to: '))
+        elif select_field == "note":
+            new_value = input('update note to: ')
+        elif select_field == "date":
+            while True:
+                date_input = input('Enter a date in the format DD-MM-YYYY: ').strip()
+                if not date_input:
+                    print("Date is required! Please enter a date")
+                    continue
+                try:
+                    new_value = datetime.strptime(date_input, "%d-%m-%Y")
+                    break
+                except ValueError:
+                    print("invalid date format! use DD-MM-YYYY")
+        else:
+            print('Please select a valid field value')
+            exit()
+        updated_income = e.update_income(select_income_by_index, select_field, new_value)
+        if updated_income:
+            print("income_updated")
+        else:
+            print('No changes made')
+        break
 else:
     print("Invalid input choice , write 'income' for INCOME and 'expense' for Expense")
 

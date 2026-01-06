@@ -62,6 +62,29 @@ class FinanceTracker():
 
     def balance(self):
         return self.total_income() - self.total_expenses()
+    
+    def update_income(self, index, field, new_value):
+        """
+        update a specific users income entry bases on field selection
+        """
+        incomes = list(income_collection.find({"username": self.__username}).sort("date", 1))
+        if not incomes:
+            return False
+        if index <1 or index >len(incomes):
+            return False
+        if field not in ("amount", "note", "date"):
+            return False
+        
+        selected_income = incomes[int(index) -1]
+        update_income = income_collection.update_one(
+            {"_id": selected_income["_id"]},
+            {"$set": {field: new_value}})
+        return update_income
+    def update_expense(self):
+        pass
+    def delete_expense(self):
+        pass
+
     def __str__(self):
         return f'Total Income {self.total_income()}, Total Expenses : {self.total_expenses()} and Balance is Ksh: {self.balance(): ,} '
 
