@@ -32,6 +32,16 @@ class FinanceTracker():
         for i in expense_collection.find({"username": self.__username}):
             total_expenses += float(i["amount"])
         return total_expenses
+    def list_incomes(self):
+        incomes_list = []
+        incomes = income_collection.find({"username": self.__username}).sort("date", 1)
+        for my_incomes in incomes:
+            amount = my_incomes.get("amount")
+            note = my_incomes.get("note")
+            date = my_incomes.get("date")
+            income_string = f'{amount}, {note}, {date}'
+            incomes_list.append(income_string)
+        return incomes_list
     
     def list_expenses(self):
         """

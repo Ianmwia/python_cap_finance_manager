@@ -17,7 +17,7 @@ else:
 #create the object
 e = FinanceTracker(username)
 
-choice = input("Do You want to add an INCOME or EXPENSE or check BALANCE, write 'income' for INCOME , 'expense' for Expense or 'balance' for BALANCE or list_all_expenses to LIST ALL EXPENSES: ")
+choice = input("Do You want to add an INCOME or EXPENSE or check BALANCE, write 'income' for INCOME , 'expense' for Expense or 'balance' for BALANCE or list_all_incomes to see your INCOME SOURCES or list_all_expenses to LIST ALL EXPENSES: ")
 
 if choice == 'income':
     income_amount = float(input('Enter an Income Amount: '))
@@ -60,6 +60,19 @@ elif choice == 'balance':
     balance = e.balance()
     print(f'{username}, Your current balance is: {balance:,.2f}')
 
+elif choice == "list_all_incomes":
+    """
+    list all incomes earned
+    """
+    list_incomes = e.list_incomes()
+    total_incomes = e.total_income()
+    if list_incomes:
+        print(f"{username} You have earned a total of {total_incomes:,} from all your income sources which are: ")
+        for idx,expense_list in enumerate(list_incomes, start=1):
+            print(f"{idx}.{expense_list}")
+    else:
+        print(f'{username}, You have no expenses')
+
 elif choice == "list_all_expenses":
     """
     list all expenses indexed
@@ -72,6 +85,7 @@ elif choice == "list_all_expenses":
             print(f"{idx}.{expense_list}")
     else:
         print(f'{username}, You have no expenses')
+
 else:
     print("Invalid input choice , write 'income' for INCOME and 'expense' for Expense")
 
