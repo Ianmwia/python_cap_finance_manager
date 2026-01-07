@@ -16,4 +16,3 @@ def create_date(date_input):
             return datetime.strptime(date_input, "%d-%m-%Y")
         except ValueError:
                 print("invalid date format! use DD-MM-YYYY")
-        exit()

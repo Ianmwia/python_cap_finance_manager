@@ -1,6 +1,5 @@
 from tracker import FinanceTracker
 from income_expense import Income, Expense
-from datetime import datetime
 from database import users_collection
 from utils import save_to_csv, create_date
 
