@@ -2,6 +2,7 @@ from tracker import FinanceTracker
 from income_expense import Income, Expense
 from datetime import datetime
 from database import users_collection
+from utils import save_to_csv, create_date
 
 
 #ask for username
@@ -40,16 +41,7 @@ choice = input(
 if choice == 'income':
     income_amount = float(input('Enter an Income Amount: '))
     note_input = input('Add a note: ')
-    while True:
-        date_input = input('Enter a date in the format DD-MM-YYYY: ').strip()
-        if not date_input:
-            print("Date is required! Please enter a date")
-            continue
-        try:
-            date = datetime.strptime(date_input, "%d-%m-%Y")
-            break
-        except ValueError:
-            print("invalid date format! use DD-MM-YYYY")
+    date = create_date(input('Enter a date in the format DD-MM-YYYY: ').strip())
 
     income = Income(amount = income_amount, note = note_input, date = date)
     e.add_income(income)
@@ -59,16 +51,7 @@ elif choice == 'expense':
     expense_amount = float(input('Add an expense Amount: '))
     category_input = input('Add an expense category: ')
     note_input = input('Add a note: ')
-    while True:
-        date_input = input('Enter a date in the format DD-MM-YYYY: ').strip()
-        if not date_input:
-            print("Date is required! Please enter a date")
-            continue
-        try:
-            date = datetime.strptime(date_input, "%d-%m-%Y")
-            break
-        except ValueError:
-            print("invalid date format! use DD-MM-YYYY")
+    date = create_date(input('Enter a date in the format DD-MM-YYYY: ').strip())
 
     expense = Expense(amount = expense_amount, category = category_input, note = note_input, date = date)
     e.add_expense(expense)
@@ -106,6 +89,19 @@ elif choice == "list_all_expenses":
         print(f"{username} You have spent a total of {total_expenses:,} on all your expenses which are: ")
         for idx,expense_list in enumerate(list_expense, start=1):
             print(f"{idx}.{expense_list}")
+
+        while True:
+                ask = input("Do you want to save an expense: yes or no: ").strip().lower()
+
+                if ask == "yes":
+                    save_expenses = save_to_csv(list_expense)
+                    break
+                elif ask == "no":
+                    break
+                else:
+                    print("select a valid choice")
+                continue
+        
     else:
         print(f'{username}, You have no expenses')
 
@@ -124,16 +120,7 @@ elif choice == "update_income":
         elif select_field == "note":
             new_value = input('update note to: ')
         elif select_field == "date":
-            while True:
-                date_input = input('Enter a date in the format DD-MM-YYYY: ').strip()
-                if not date_input:
-                    print("Date is required! Please enter a date")
-                    continue
-                try:
-                    new_value = datetime.strptime(date_input, "%d-%m-%Y")
-                    break
-                except ValueError:
-                    print("invalid date format! use DD-MM-YYYY")
+            new_value = create_date(input('Enter a date in the format DD-MM-YYYY: ').strip())
         else:
             print('Please select a valid field value')
             exit()
@@ -170,7 +157,7 @@ elif choice == "update_expense":
     while True:
 
         select_expense_by_index = int(input('select the index of the statement to update: '))
-        select_field = input("what do you want to update: amount, category, note or date: ")
+        select_field = input("what do you want to update: amount, category, note or date: ").lower().strip()
 
         if select_field  == "amount":
             new_value = float(input('update amount to: '))
@@ -182,16 +169,7 @@ elif choice == "update_expense":
             new_value = input('update note to: ')
 
         elif select_field == "date":
-            while True:
-                date_input = input('Enter a date in the format DD-MM-YYYY: ').strip()
-                if not date_input:
-                    print("Date is required! Please enter a date")
-                    continue
-                try:
-                    new_value = datetime.strptime(date_input, "%d-%m-%Y")
-                    break
-                except ValueError:
-                    print("invalid date format! use DD-MM-YYYY")
+            new_value = create_date(input('Enter a date in the format DD-MM-YYYY: ').strip())
         else:
             print('Please select a valid field value')
             exit()
